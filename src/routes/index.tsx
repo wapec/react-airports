@@ -18,7 +18,7 @@ const Routes = () => {
       }
     >
       <Switch>
-        <Route component={MainComponent} path="/" exact />
+        <Route component={MainComponent} path="/react-airports" exact />
       </Switch>
     </Suspense>
   );
