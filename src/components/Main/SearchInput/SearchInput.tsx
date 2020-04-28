@@ -7,12 +7,13 @@ import React, {
   useEffect,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Input, Card, Label } from 'semantic-ui-react';
+import { Input, Card, Label, Popup, Icon } from 'semantic-ui-react';
 import { isEmpty } from 'ramda';
+import clsx from 'clsx';
 
 import { areEqual } from '../../../utils/helpers';
 import useDebounce from '../../../hooks/useDebounce';
-import { IAirport } from '../../Main/_models/airportModel';
+import { IAirport } from '../_models/airportModel';
 import { setSearchAction } from './_redux/searchActions';
 import { searchSelector } from './_redux/searchSelectors';
 
@@ -21,12 +22,18 @@ import styles from './SearchInput.module.scss';
 interface IOwnProps {
   list: any[];
   searchCondition: string[];
-  onResultClick: (e: MouseEvent, list: any[]) => void;
+  onResultClick: (e: MouseEvent, list: IAirport[]) => void;
+  onIconClick: (e: MouseEvent, list: IAirport[]) => void;
 }
 
 type Props = IOwnProps;
 
-const SearchInput: FC<Props> = ({ list, onResultClick, searchCondition }) => {
+const SearchInput: FC<Props> = ({
+  list,
+  onResultClick,
+  searchCondition,
+  onIconClick,
+}) => {
   const dispatch = useDispatch();
   const { searchResults } = useSelector(searchSelector);
   const [searchValue, setSearchValue] = useState('');
@@ -41,6 +48,11 @@ const SearchInput: FC<Props> = ({ list, onResultClick, searchCondition }) => {
 
   const onCardClickHandler = (e: MouseEvent<HTMLAnchorElement>) => {
     onResultClick(e, list);
+  };
+
+  const onIconClickHandler = (e: MouseEvent<HTMLAnchorElement>) => {
+    e.stopPropagation();
+    onIconClick(e, list);
   };
 
   useEffect(() => {
@@ -83,7 +95,22 @@ const SearchInput: FC<Props> = ({ list, onResultClick, searchCondition }) => {
             ) => (
               <Card
                 key={index}
-                header={iata}
+                header={
+                  <Popup
+                    content="Where can I fly from here? Click"
+                    position="top right"
+                    inverted
+                    basic
+                    trigger={
+                      <div className={clsx('header', styles.popupHeader)}>
+                        {iata}
+                        <span onClick={onIconClickHandler} data-id={id}>
+                          <Icon name="globe" />
+                        </span>
+                      </div>
+                    }
+                  />
+                }
                 meta={icao}
                 description={`${name} / ${city}, ${country}`}
                 data-id={id}

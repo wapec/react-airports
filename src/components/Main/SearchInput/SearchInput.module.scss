@@ -34,4 +34,21 @@
       background: transparent;
     }
   }
+
+  .popupHeader {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+
+    > span {
+      margin-bottom: 10px;
+      z-index: 5;
+      cursor: pointer;
+      transition: opacity 0.3s ease-in-out;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
 }

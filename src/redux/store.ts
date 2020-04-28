@@ -4,7 +4,7 @@ import { persistStore } from 'redux-persist';
 import createSagaMiddleware, { SagaMiddleware } from 'redux-saga';
 
 import mainReducer from '../components/Main/_redux/mainReducers';
-import searchReducer from '../components/_common/SearchInput/_redux/searchReducers';
+import searchReducer from '../components/Main/SearchInput/_redux/searchReducers';
 import rootSaga from './rootSaga';
 
 const rootReducer = combineReducers({
