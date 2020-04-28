@@ -1,0 +1,37 @@
+@import '../../../styles/mixins.scss';
+
+.root {
+  backdrop-filter: blur(5px);
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 4px;
+  max-width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 5;
+  height: fit-content;
+
+  .searchInput {
+    font-size: 16px;
+  }
+
+  .noResults {
+    padding: 24px 0 12px;
+  }
+
+  .resultsWrapper {
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;
+    margin-top: 12px;
+    position: relative;
+
+    @include noScrollBar;
+
+    .resultLabel {
+      background: transparent;
+    }
+  }
+}
