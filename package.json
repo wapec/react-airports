@@ -1,5 +1,6 @@
 {
   "name": "react-airports",
+  "homepage": "http://wapec.github.io/react-airports",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,16 +11,34 @@
     "@types/node": "^12.0.0",
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
+    "@types/react-redux": "^7.1.7",
+    "@types/react-router-dom": "^5.1.4",
+    "@types/redux-saga": "^0.10.5",
+    "axios": "^0.19.2",
+    "clsx": "^1.1.0",
+    "leaflet": "^1.6.0",
+    "ramda": "^0.26.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-leaflet": "^2.6.3",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.1.2",
+    "react-saga": "^0.3.1",
     "react-scripts": "3.4.1",
+    "redux": "^4.0.5",
+    "redux-devtools-extension": "^2.13.8",
+    "redux-persist": "^6.0.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.2",
     "typescript": "~3.7.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "yarn run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -34,6 +53,34 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/ramda": "^0.26.38",
+    "@types/react-leaflet": "^2.5.1",
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
+    "@typescript-eslint/parser": "^2.8.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "gh-pages": "^2.2.0",
+    "husky": "^3.1.0",
+    "lint-staged": "^9.4.3",
+    "node-sass": "^4.14.0",
+    "prettier": "^1.19.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --ext js,jsx,ts,tsx",
+      "git add"
     ]
   }
 }
