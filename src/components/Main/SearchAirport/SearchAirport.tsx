@@ -7,6 +7,7 @@ import React, {
   useEffect,
 } from 'react';
 import { useSelector } from 'react-redux';
+import { isEmpty } from 'ramda';
 
 import { areEqual } from '../../../utils/helpers';
 import { IAirport } from '../_models/airportModel';
@@ -16,6 +17,7 @@ import { searchSelector } from '../SearchInput/_redux/searchSelectors';
 import { IMarker, IPosition } from '../_models/mapModel';
 import SearchInput from '../SearchInput/SearchInput';
 import { MAP_CONFIG } from '../../../config/mapConfig';
+import { getAllDestinations } from '../_helpers/routesHelpers';
 
 import styles from './SearchAirport.module.scss';
 
@@ -27,13 +29,16 @@ const SearchAirport: FC<Props> = () => {
   const [mapCenter, setMapCenter] = useState<IPosition>({
     lat: 51.477928,
     lng: -0.001545,
-  }); // London City
-  const [hubAirport, setHubAirport] = useState<IAirport | null>(null);
+  }); // Greenwich
   const [zoom, setZoom] = useState(MAP_CONFIG.zoom);
-  const searchCondition = ['iata', 'name', 'country', 'city'];
+  const [hubAirport, setHubAirport] = useState<IAirport | null>(null);
+  const [airportsTo, setAirportsTo] = useState<IAirport[]>([]);
+  const [routesLines, setRouteLines] = useState<IPosition[][]>([]);
 
-  const { airportsList } = useSelector(mainSelector);
+  const { airportsList, routesList } = useSelector(mainSelector);
   const { searchResults } = useSelector(searchSelector);
+
+  const searchCondition = ['iata', 'name', 'country', 'city'];
 
   const transformForMapMarker: IMarker[] = useMemo(() => {
     setZoom(MAP_CONFIG.zoom);
@@ -52,23 +57,58 @@ const SearchAirport: FC<Props> = () => {
     return foundAirport || null;
   };
 
+  const focusOnAirportHandler = (airport: IAirport) => {
+    setMapCenter({ lat: +airport.lat, lng: +airport.lng });
+    setZoom(MAP_CONFIG.optimalZoom);
+    setAirportsTo([]);
+    setRouteLines([]);
+  };
+
   const onResultClickHandler = (e: MouseEvent, list: IAirport[]) => {
     const airport = getAirport(e, list);
     if (airport && airport.lat && airport.lng) {
-      setMapCenter({ lat: +airport.lat, lng: +airport.lng });
-      setZoom(MAP_CONFIG.optimalZoom);
+      focusOnAirportHandler(airport);
     }
   };
 
   const onIconClickHandler = (e: MouseEvent, list: IAirport[]) => {
     const airport = getAirport(e, list);
-    setHubAirport(airport);
-    setZoom(MAP_CONFIG.optimalZoom);
+    if (airport && airport.lat && airport.lng) {
+      setHubAirport(airport);
+    }
   };
 
   useEffect(() => {
-    // console.log(hubAirport);
+    if (hubAirport) {
+      focusOnAirportHandler(hubAirport);
+      if (!isEmpty(routesList)) {
+        const routesTo = getAllDestinations(hubAirport, routesList);
+        const airportsIataTo = routesTo
+          .map(route => route.sourceAirport)
+          .join(',');
+        setAirportsTo(
+          airportsList.filter(airport => airportsIataTo.includes(airport.iata)),
+        );
+      }
+    }
   }, [hubAirport]);
+
+  useEffect(() => {
+    if (!isEmpty(airportsTo) && hubAirport) {
+      const { lat, lng } = hubAirport;
+      const lines = airportsTo.reduce((acc: any, curr: IAirport) => {
+        acc = [
+          ...acc,
+          [
+            { lat, lng },
+            { lat: +curr.lat, lng: +curr.lng },
+          ],
+        ];
+        return acc;
+      }, []);
+      setRouteLines(lines);
+    }
+  }, [airportsTo]);
 
   return (
     <div className={styles.root}>
@@ -77,6 +117,7 @@ const SearchAirport: FC<Props> = () => {
         center={mapCenter}
         zoom={zoom}
         className={styles.map}
+        lines={routesLines}
       />
       <div className={styles.searchContainer}>
         <SearchInput

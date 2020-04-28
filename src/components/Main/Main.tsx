@@ -2,7 +2,7 @@ import React, { FC, memo, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { areEqual } from '../../utils/helpers';
-import { getAirportsAction } from './_redux/mainActions';
+import { getAirportsAction, getRoutesAction } from './_redux/mainActions';
 import SearchAirport from './SearchAirport/SearchAirport';
 
 import styles from './Main.module.scss';
@@ -16,6 +16,7 @@ const Main: FC<Props> = () => {
 
   useEffect(() => {
     dispatch(getAirportsAction());
+    dispatch(getRoutesAction());
   }, [dispatch]);
 
   return (
