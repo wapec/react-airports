@@ -70,6 +70,7 @@ const SearchAirport: FC<Props> = () => {
   const focusOnAirportHandler = (airport: IAirport) => {
     const { lat, lng } = airport;
     if (isPositionValid(+lat, +lng)) setMapCenter({ lat: +lat, lng: +lng });
+    clearInfo();
     setZoom(MAP_CONFIG.optimalZoom);
   };
 
