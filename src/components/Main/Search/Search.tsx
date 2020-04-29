@@ -17,7 +17,7 @@ import { IAirport } from '../_models/airportModel';
 import { setSearchAction } from './_redux/searchActions';
 import { searchSelector } from './_redux/searchSelectors';
 
-import styles from './SearchInput.module.scss';
+import styles from './Search.module.scss';
 
 interface IOwnProps {
   list: any[];
@@ -28,7 +28,7 @@ interface IOwnProps {
 
 type Props = IOwnProps;
 
-const SearchInput: FC<Props> = ({
+const Search: FC<Props> = ({
   list,
   onResultClick,
   searchCondition,
@@ -118,6 +118,10 @@ const SearchInput: FC<Props> = ({
               ></Card>
             ),
           )}
+          <span>
+            Data from{' '}
+            <a href="https://openflights.org/data.html">OpenFlights</a>
+          </span>
         </div>
       )}
       {isEmpty(searchResults) && searchAvailabilityFlag && (
@@ -127,4 +131,4 @@ const SearchInput: FC<Props> = ({
   );
 };
 
-export default memo(SearchInput, areEqual);
+export default memo(Search, areEqual);

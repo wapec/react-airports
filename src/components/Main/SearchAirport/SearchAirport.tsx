@@ -13,9 +13,9 @@ import { areEqual } from '../../../utils/helpers';
 import { IAirport } from '../_models/airportModel';
 import LeafMap from '../Map/Map';
 import { mainSelector } from '../_redux/mainSelectors';
-import { searchSelector } from '../SearchInput/_redux/searchSelectors';
+import { searchSelector } from '../Search/_redux/searchSelectors';
 import { IMarker, IPosition } from '../_models/mapModel';
-import SearchInput from '../SearchInput/SearchInput';
+import Search from '../Search/Search';
 import { MAP_CONFIG } from '../../../config/mapConfig';
 import { getAllDestinations } from '../_helpers/routesHelpers';
 
@@ -130,7 +130,7 @@ const SearchAirport: FC<Props> = () => {
         lines={routesLines}
       />
       <div className={styles.searchContainer}>
-        <SearchInput
+        <Search
           list={airportsList}
           searchCondition={searchCondition}
           onResultClick={onResultClickHandler}
