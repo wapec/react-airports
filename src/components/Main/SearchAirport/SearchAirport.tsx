@@ -40,11 +40,21 @@ const SearchAirport: FC<Props> = () => {
 
   const searchCondition = ['iata', 'name', 'country', 'city'];
 
-  const transformForMapMarker: IMarker[] = useMemo(() => {
+  const clearInfo = () => {
     setZoom(MAP_CONFIG.zoom);
+    setAirportsTo([]);
+    setRouteLines([]);
+  };
+
+  const isPositionValid = (lat: number, lng: number) => {
+    return !Number.isNaN(lat) && !Number.isNaN(lng);
+  };
+
+  const transformForMapMarker: IMarker[] = useMemo(() => {
+    clearInfo();
     let markers = [] as IMarker[];
     searchResults.forEach(({ lat, lng, name, id }: IAirport) => {
-      if (!Number.isNaN(+lat) && !Number.isNaN(+lng))
+      if (isPositionValid(+lat, +lng))
         markers = [...markers, { lat: +lat, lng: +lng, info: name, id }];
     });
     return markers;
@@ -58,22 +68,21 @@ const SearchAirport: FC<Props> = () => {
   };
 
   const focusOnAirportHandler = (airport: IAirport) => {
-    setMapCenter({ lat: +airport.lat, lng: +airport.lng });
+    const { lat, lng } = airport;
+    if (isPositionValid(+lat, +lng)) setMapCenter({ lat: +lat, lng: +lng });
     setZoom(MAP_CONFIG.optimalZoom);
-    setAirportsTo([]);
-    setRouteLines([]);
   };
 
   const onResultClickHandler = (e: MouseEvent, list: IAirport[]) => {
     const airport = getAirport(e, list);
-    if (airport && airport.lat && airport.lng) {
+    if (airport && isPositionValid(+airport.lat, +airport.lng)) {
       focusOnAirportHandler(airport);
     }
   };
 
   const onIconClickHandler = (e: MouseEvent, list: IAirport[]) => {
     const airport = getAirport(e, list);
-    if (airport && airport.lat && airport.lng) {
+    if (airport && isPositionValid(+airport.lat, +airport.lng)) {
       setHubAirport(airport);
     }
   };
